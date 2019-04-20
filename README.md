@@ -85,7 +85,7 @@ You can preview result in web browser. Visualized with [Chart.js](https://www.ch
 DEBUG=true REBUILD=true PORT=9000 node run.js 100000
 ```
 
-open your browser and go to [http://localhost:9000/](http://localhost:9000/).
+open your browser and go to [http://localhost:9000/](http://localhost:9000/)
 
 
 # Run with Docker
@@ -102,6 +102,6 @@ docker-exec  -it thread run.sh --help
 or with `docker-compose`
 ```bash
 docker-compose up -d
-docker-compose exec multithreading-benchmark run.sh -p all -n 
+docker-compose exec multithreading-benchmark run.sh -p all -n 100000
 docker-compose exec multithreading-benchmark run.sh --help
 ```
