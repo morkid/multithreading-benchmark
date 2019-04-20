@@ -1,7 +1,7 @@
 # MultiThreading - Benchmark
 
 This is an example for `Python`, `PHP`, `JavaScript`, `Java`, `C++`, `C` and `C#` multi threading performance test. 
-How many they can calculate prime numbers.  
+How many prime numbers they can calculate?  
 By default only 4 threads running on each process.
 
 Current running environments:
