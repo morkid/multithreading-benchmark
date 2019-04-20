@@ -85,7 +85,7 @@ You can preview result in web browser. Visualized with [Chart.js](https://www.ch
 DEBUG=true REBUILD=true PORT=9000 node run.js 100000
 ```
 
-open your browser and go to [https://localhost:9000/](https://localhost:9000/).
+open your browser and go to [http://localhost:9000/](http://localhost:9000/).
 
 
 # Run with Docker
