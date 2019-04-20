@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Multithreading - Benchmark</title>
+    <link rel="stylesheet" href="https://bootswatch.com/3/paper/bootstrap.min.css"/>
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="navbar-header">
+            <span class="navbar-brand">Multithreading - Benchmark</span>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-success">
+                    <strong><i class="glyphicon glyphicon-ok"></i> Build success.</strong>
+                    <p>Validating <strong id="tpn">0</strong> prime numbers in 
+                    <strong id="ms">0</strong> ms.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <canvas id="pie" width="400" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <canvas id="column" width="400" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Language</th>
+                                    <th class="text-right">Build steps (ms)</th>
+                                    <th class="text-right">Total build steps (ms)</th>
+                                    <th class="text-center">CPU usage</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="text-center">Raw result</h4>
+                    </div>
+                    <div class="panel-body">
+                        <pre id="raw"></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

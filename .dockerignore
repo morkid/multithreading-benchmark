@@ -1,0 +1,8 @@
+/*
+!.dockerignore
+!*.php
+!*.js
+!*.sh
+!*.html
+!Prime.*
+!Thread*
