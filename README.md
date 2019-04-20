@@ -77,3 +77,28 @@ Language thread id #2: executes 100000 prime numbers in 280 ms
 Language thread id #4: executes 100000 prime numbers in 287 ms
 Language thread id #3: executes 100000 prime numbers in 283 ms
 ```
+# Preview result in web browser
+
+You can preview result in web browser. Visualized with [Chart.js](https://www.chartjs.org) 
+
+```bash
+DEBUG=true REBUILD=true PORT=9000 node run.js 100000
+```
+
+# Run with Docker
+
+Simple run with docker:
+
+```bash
+docker build -t multithreading-benchmark --rm --force-rm .
+docker run --name thread -p 9000:9000 -d multithreading-benchmark
+docker-exec  -it thread run.sh -p all -n 100000
+docker-exec  -it thread run.sh --help
+```
+
+or with `docker-compose`
+```bash
+docker-compose up -d
+docker-compose exec multithreading-benchmark run.sh -p all -n 
+docker-compose exec multithreading-benchmark run.sh --help
+```

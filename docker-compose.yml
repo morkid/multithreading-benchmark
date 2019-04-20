@@ -1,0 +1,8 @@
+version: '3.4'
+services:
+  multithreading-benchmark:
+    image: multithreading-benchmark
+    container_name: thread
+    build: ./
+    ports:
+      - 9000:9000
