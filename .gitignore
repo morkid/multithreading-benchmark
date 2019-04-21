@@ -1,6 +1,7 @@
 /*
 !.gitignore
 !.dockerignore
+!.preview.png
 !*.java
 !*.js
 !.profile
