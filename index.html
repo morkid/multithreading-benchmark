@@ -8,19 +8,33 @@
 </head>
 <body>
     <nav class="navbar navbar-default navbar-static-top" role="navigation">
-        <div class="navbar-header">
-            <span class="navbar-brand">Multithreading - Benchmark</span>
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <span class="navbar-brand">Multithreading - Benchmark</span>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a id="_run" href="#"><i class="glyphicon glyphicon-play-circle"></i> Run</a></li>
+                <li><a id="_build" href="#"><i class="glyphicon glyphicon-refresh"></i> Build</a></li>
+            </ul>
         </div>
     </nav>
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="alert alert-success">
-                    <strong><i class="glyphicon glyphicon-ok"></i> Build success.</strong>
-                    <p>Validating <strong id="tpn">0</strong> prime numbers in 
-                    <strong id="ms">0</strong> ms.</p>
-                </div>
-            </div>
+        <div id="info-success" class="hide alert alert-success">
+            <strong><i class="glyphicon glyphicon-ok-circle"></i> Processes completed.</strong>
+            <p>Validating <strong id="tpn">0</strong> prime numbers in 
+            <strong id="ms">0</strong> ms.</p>
+        </div>
+        <div id="info-build" class="hide alert alert-danger">
+            <strong><i class="glyphicon glyphicon-refresh"></i> Build in progress...</strong>
+            <p></p>
+            <a href="./" class="btn btn-success btn-sm">Refresh</a>
+        </div>
+        <div id="info-run" class="hide alert alert-info">
+            <strong><i class="glyphicon glyphicon-time"></i> Threads running...</strong>
+            <p></p>
+            <a href="./" class="btn btn-success btn-sm">Refresh</a>
+        </div>
+        <div class="row" id="container">
             <div class="col-md-6 col-xs-12">
                 <div class="panel panel-default">
                     <div class="panel-body">
@@ -58,10 +72,14 @@
                         <h4 class="text-center">Raw result</h4>
                     </div>
                     <div class="panel-body">
-                        <pre id="raw"></pre>
+                        <pre id="raw" style="background-color: #333;color: #f5f5f5;"></pre>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="hide">
+            <form action="./run" method="post" id="f_run"></form>
+            <form action="./rebuild" method="post" id="f_rebuild"></form>
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>

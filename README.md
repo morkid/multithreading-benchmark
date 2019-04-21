@@ -102,6 +102,6 @@ docker-exec  -it thread run.sh --help
 or with `docker-compose`
 ```bash
 docker-compose up -d
-docker-compose exec multithreading-benchmark run.sh -p all -n 100000
-docker-compose exec multithreading-benchmark run.sh --help
+docker-compose exec thread run.sh -p all -n 100000
+docker-compose exec thread run.sh --help
 ```

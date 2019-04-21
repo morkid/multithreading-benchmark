@@ -1,8 +1,15 @@
-version: '3.4'
+version: '3'
 services:
-  multithreading-benchmark:
+  thread:
     image: multithreading-benchmark
     container_name: thread
     build: ./
+    volumes:
+      - ./run.js:/opt/multithreading/run.js:ro
+      - ./index.html:/opt/multithreading/index.html:ro
     ports:
-      - 9000:9000
+      - 9000:8000
+    environment:
+      - DEBUG=true
+      - REBUILD=true
+      - PORT=8000

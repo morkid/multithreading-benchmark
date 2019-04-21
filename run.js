@@ -1,4 +1,33 @@
 function app() {
+    function _i(i) {
+        return document.getElementById(i);
+    }
+    var info = {
+        success: _i('info-success'),
+        run: _i('info-run'),
+        build: _i('info-build'),
+    };
+
+    if (chartData().running || chartData().rebuilding) {
+        if (chartData().rebuilding) {
+            info.build.classList.remove('hide');
+            setTimeout(function() {
+                window.location.href = './';
+            }, 3000);
+        }
+        if (chartData().running) {
+            info.run.classList.remove('hide');
+            setTimeout(function() {
+                window.location.href = './';
+            }, 3000);
+        }
+        _i('container').classList.add('hide');
+        return;
+    } else {
+        info.success.classList.remove('hide');
+    }
+    
+
     var allTotal = chartData().total || 0;
     var pie = new Chart('pie', {
         type: 'pie',
@@ -73,12 +102,12 @@ function app() {
     pie.canvas.parentNode.style.height = '700px';
     col.canvas.parentNode.style.height = '700px';
 
-    document.getElementById('raw').innerText = chartData().raw;
+    _i('raw').innerText = chartData().raw;
     var num = chartData().totalPrimeNumbers || 0;
     var ms = 0;
-    document.getElementById('tpn').innerText = num;
-    document.getElementById('ms').innerText = allTotal;
-    var tbody = document.getElementById('tbody');
+    _i('tpn').innerText = num;
+    _i('ms').innerText = allTotal;
+    var tbody = _i('tbody');
     var tables = chartData().tables;
     
     var trs = [];
@@ -120,6 +149,20 @@ function app() {
 
     tbody.innerHTML += '<tr><td class="text-right" colspan="2">Total</td><td class="text-right">'+allTotal+'</td><td class="text-center">'+cpus+'%</td></tr>'
 
+    _i('_run').addEventListener('click', function(e) {
+        try {
+            e.preventDefault();
+        } catch (e){}
+        _i('f_run').submit();
+        return false;
+    }, false);
+    _i('_build').addEventListener('click', function(e) {
+        try {
+            e.preventDefault();
+        } catch (e){}
+        _i('f_rebuild').submit();
+        return false;
+    }, false);
 }
 function getRandomRgb() {
     var num = Math.round(0xffffff * Math.random());
@@ -132,7 +175,7 @@ function build(num, delay) {
     if (isNaN(delay)) {
         delay = 5;
     }
-    var enable_build = process.env.REBUILD && process.env.REBUILD == 'true';
+    var enable_build = !(process.env.REBUILD && process.env.REBUILD == 'false');
     var debug = process.env.DEBUG && process.env.DEBUG.toLowerCase() == 'true';
     var port = process.env.PORT || 9000;
     var http = require('http');
@@ -158,7 +201,12 @@ function build(num, delay) {
     };
 
     function rebuild(callback) {
-        var callbackTriggered = false;
+        callback = callback || function() {};
+        if (data_js.rebuilding) {
+            return callback();
+        }
+        data_js.rebuilding = true;
+        var cbTriggered = false;
         var rebuild = spawn(runScript, ['-b', '-p', 'all'], spawnOpt);
         rebuild.stdout.on('data', function(data) {
             process.stdout.write(data);
@@ -168,9 +216,10 @@ function build(num, delay) {
         });
         rebuild.on('exit', function(code) {
             if (code == 0) {
-                if (!callbackTriggered) {
+                data_js.rebuilding = false;
+                if (!cbTriggered) {
                     console.log('Build complete');
-                    callbackTriggered = true;
+                    cbTriggered = true;
                     callback();
                 }
             } else {
@@ -179,9 +228,10 @@ function build(num, delay) {
         });
         rebuild.on('close', function(code) {
             if (code == 0) {
-                if (!callbackTriggered) {
+                data_js.rebuilding = false;
+                if (!cbTriggered) {
                     console.log('Build complete');
-                    callbackTriggered = true;
+                    cbTriggered = true;
                     callback();
                 }
             } else {
@@ -190,7 +240,13 @@ function build(num, delay) {
         });
     }
 
-    function start() {
+    function start(skipServer) {
+        if (data_js.running || data_js.rebuilding) {
+            return;
+        }
+        data_js.pie = {};
+        data_js.column = {};
+        data_js.running = true;
         var bench = spawn(runScript, ['-n', num, '-d', delay, '-p', 'all'], spawnOpt);
         var arrBuffer = [];
         var arrErrors = [];
@@ -213,7 +269,10 @@ function build(num, delay) {
             data_js = getDataJs(data_raw);
             data_js.raw = data_raw;
             data_js.totalPrimeNumbers = num;
-            runServer();
+            data_js.running = false;
+            if (!skipServer) {
+                runServer();
+            }
         });
     }
 
@@ -257,7 +316,8 @@ function build(num, delay) {
             };
             labels.push(i);
             bgColors.push(color);
-            borderColors.push('rgb(255,255,255)');
+            borderColors.push(color);
+            // borderColors.push('rgb(255,255,255)');
             var total = 0;
             for (var a in results[i]) {
                 total+=results[i][a];
@@ -293,11 +353,13 @@ function build(num, delay) {
     };
 
     function runServer() {
+        data_js.rebuilding = false;
         http.createServer(function(req, res) {
             var server = url.parse(req.url);
             if (debug) {
-                console.log(server);
+                console.log(req.method, server.href);
             }
+            
             if (server.pathname == '/data.js') {
                 res.setHeader('Content-type', 'application/javascript; charset=utf-8');
                 res.write(';(function(){window.chartData=function(){return '+JSON.stringify(data_js)+'}})()');
@@ -338,6 +400,21 @@ function build(num, delay) {
                     res.write(index_html);
                     res.end();
                 }
+            } else if (req.method == 'POST') {
+                switch (server.pathname) {
+                    case '/rebuild':
+                        rebuild();
+                        res.writeHead(301, {Location: '/?rebuilding=true'});
+                    break;
+                    case '/run':
+                        start(true);
+                        res.writeHead(301, {Location: '/?running=true'});
+                    break;
+                    default:
+                        res.writeHead(301, {Location: '/404'});
+                    break;
+                }
+                res.end();
             } else {
                 res.setHeader('Content-type', 'text/html; charset=utf-8')
                 res.statusCode = 404;
