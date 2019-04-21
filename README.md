@@ -87,7 +87,7 @@ DEBUG=true REBUILD=true PORT=9000 node run.js 100000
 
 open your browser and go to [http://localhost:9000/](http://localhost:9000/)
 
-![MultiThreading - Benchmark](preview.png)
+![MultiThreading - Benchmark](/preview.png)
 
 # Run with Docker
 
