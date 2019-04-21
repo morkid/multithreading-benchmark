@@ -14,7 +14,7 @@ class ThreadJavaScript {
                     const count = prime.count();
                     const times = new Date().getTime() - this.startAt;
                     console.log(
-                        `JavaScript thread id #${threadId}: executes ${prime.count()} prime numbers in ${times} ms`);
+                        `JavaScript thread id #${threadId}: executes ${count} prime numbers in ${times} ms`);
                 }
             };
 
