@@ -6,7 +6,15 @@ function app() {
         success: _i('info-success'),
         run: _i('info-run'),
         build: _i('info-build'),
+        input: _i('prime-input'),
+        form: _i('nav_form')
     };
+    var num = chartData().totalPrimeNumbers || 0;
+    info.input.value = num;
+    info.form.addEventListener('submit', function(e) {
+        info.form.action = './run?num=' + info.input.value;
+        return true;
+    }, false);
 
     if (chartData().running || chartData().rebuilding) {
         if (chartData().rebuilding) {
@@ -103,7 +111,6 @@ function app() {
     col.canvas.parentNode.style.height = '700px';
 
     _i('raw').innerText = chartData().raw;
-    var num = chartData().totalPrimeNumbers || 0;
     var ms = 0;
     _i('tpn').innerText = num;
     _i('ms').innerText = allTotal;
@@ -165,10 +172,10 @@ function app() {
     }, false);
 }
 function getRandomRgb() {
-    var num = Math.round(0xffffff * Math.random());
-    var r = num >> 16;
-    var g = num >> 8 & 255;
-    var b = num & 255;
+    var clr = Math.round(0xffffff * Math.random());
+    var r = clr >> 16;
+    var g = clr >> 8 & 255;
+    var b = clr & 255;
     return 'rgb(' + r + ', ' + g + ', ' + b + ')';
 }
 function build(num, delay) {
@@ -247,6 +254,7 @@ function build(num, delay) {
         data_js.pie = {};
         data_js.column = {};
         data_js.running = true;
+        data_js.totalPrimeNumbers = num;
         var bench = spawn(runScript, ['-n', num, '-d', delay, '-p', 'all'], spawnOpt);
         var arrBuffer = [];
         var arrErrors = [];
@@ -355,7 +363,7 @@ function build(num, delay) {
     function runServer() {
         data_js.rebuilding = false;
         http.createServer(function(req, res) {
-            var server = url.parse(req.url);
+            var server = url.parse(req.url, true);
             if (debug) {
                 console.log(req.method, server.href);
             }
@@ -365,7 +373,7 @@ function build(num, delay) {
                 res.write(';(function(){window.chartData=function(){return '+JSON.stringify(data_js)+'}})()');
                 res.end();
             }
-            else if (server.pathname == '/app.js') {
+            else if (server.pathname == '/run.js') {
                 res.setHeader('Content-type', 'application/javascript; charset=utf-8');
                 if (debug) {
                     fs.readFile(__filename, function(err, data) {
@@ -407,12 +415,16 @@ function build(num, delay) {
                         res.writeHead(301, {Location: '/?rebuilding=true'});
                     break;
                     case '/run':
+                        if (server.query && server.query.num && server.query.num.match(/^\d+$/)) {
+                            num = parseInt(server.query.num);
+                        }
                         start(true);
                         res.writeHead(301, {Location: '/?running=true'});
                     break;
                     default:
                         res.writeHead(301, {Location: '/404'});
                     break;
+
                 }
                 res.end();
             } else {

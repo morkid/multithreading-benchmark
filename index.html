@@ -12,7 +12,16 @@
             <div class="navbar-header">
                 <span class="navbar-brand">Multithreading - Benchmark</span>
             </div>
-            <ul class="nav navbar-nav navbar-right">
+            <form class="navbar-form navbar-right" id="nav_form" method="post" action="./run?num=1000">
+                <div class="input-group">
+                    <input type="number" id="prime-input" class="form-control" type="number" step="1" min="1000" max="999999" value="1000" placeholder="Prime numbers">
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-play-circle"></i> Run</button>
+                    </div>
+                </div>
+                <a class="btn btn-default" id="_build" href="#"><i class="glyphicon glyphicon-refresh"></i> Build</a>
+            </form>
+            <ul class="hide nav navbar-nav navbar-right">
                 <li><a id="_run" href="#"><i class="glyphicon glyphicon-play-circle"></i> Run</a></li>
                 <li><a id="_build" href="#"><i class="glyphicon glyphicon-refresh"></i> Build</a></li>
             </ul>
@@ -84,6 +93,6 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
     <script src="data.js"></script>
-    <script src="app.js"></script>
+    <script src="run.js"></script>
 </body>
 </html>
